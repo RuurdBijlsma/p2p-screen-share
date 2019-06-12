@@ -1,4 +1,6 @@
-# vueshare
+# p2p screen share
+Server software:
+https://github.com/ruurdbijlsma/signal-server
 
 ## Project setup
 ```
