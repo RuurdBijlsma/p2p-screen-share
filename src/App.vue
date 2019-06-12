@@ -5,6 +5,8 @@
 </template>
 
 <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
+
     html, body {
         margin: 0;
         padding: 0;

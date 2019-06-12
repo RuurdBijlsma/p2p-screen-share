@@ -30,7 +30,7 @@
                     <md-button v-else-if="server.online" disabled class="md-dense md-primary md-raised">
                         Connected
                     </md-button>
-                    <md-button class="md-dense md-primary" @click="removeServer(server)">Remove</md-button>
+                    <md-button class="md-dense md-primary" @click="removeServer(server.ip)">Remove</md-button>
                 </md-list-item>
             </md-list>
 
