@@ -2,7 +2,9 @@
 Server software:
 https://github.com/ruurdbijlsma/signal-server
 
+### Select screen:
 ![Image of selecting screen](gh-img/select.png)
+### Watching someone else's screen stream, can be fullscreened. Audio works too, is muted by default
 ![Image of watching screen stream](gh-img/screen.png)
 
 
