@@ -2,6 +2,10 @@
 Server software:
 https://github.com/ruurdbijlsma/signal-server
 
+![Image of selecting screen](gh-img/select.png)
+![Image of watching screen stream](gh-img/screen.png)
+
+
 ## Project setup
 ```
 npm install
