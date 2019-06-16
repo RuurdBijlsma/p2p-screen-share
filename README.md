@@ -1,6 +1,14 @@
 # p2p screen share
-Server software:
-https://github.com/ruurdbijlsma/signal-server
+How to use:
+* Have a server running, server software can be found here: https://github.com/ruurdbijlsma/signal-server
+* Install the latest client release found here: https://github.com/RuurdBijlsma/p2p-screen-share/releases
+
+
+### Select screen to share to people in server room:
+![Image of selecting screen](gh-img/select.png)
+### Watching someone else's screen stream, can be fullscreened. Audio works too, is muted by default
+![Image of watching screen stream](gh-img/screen.png)
+
 
 ## Project setup
 ```
