@@ -10,7 +10,9 @@ export default class SimplePeerMesh {
         this.peers = {};
         this._events = {};
         this.printDebug = false;
-        this.roomCount = -1
+        this.roomCount = -1;
+        this.room = '';
+        this.socketId = '';
     }
 
     static async getServerRooms(url) {
@@ -26,6 +28,7 @@ export default class SimplePeerMesh {
     }
 
     join(room) {
+        this.room = room;
         // Waiting for this promise is dangerous, room count might be incorrect on the server due to bad disconnect
         return new Promise(resolve => {
             this.socket.emit('join', room);
@@ -77,7 +80,9 @@ export default class SimplePeerMesh {
             });
 
             this.socket.on('socketId', mySocketId => {
-                this.log(`My socket id = ${mySocketId}`)
+                this.log(`My socket id = ${mySocketId}`);
+                this.fire('socketId', mySocketId);
+                this.socketId = mySocketId;
             });
 
             this.socket.on('initialize', socketId => {
@@ -103,28 +108,33 @@ export default class SimplePeerMesh {
                     this.peers[socketId] = this.createPeer(socketId, false)
                 }
 
-                // if (signal.renegotiate) {
-                //     this.log('Received renegotiate request', socketId);
-                //     this.peers[socketId].destroy();
-                //     delete this.peers[socketId];
-                //     this.socket.emit('message', [socketId, 'initialize', ''])
-                // } else {
-                    this.log(`Signalling ${socketId}`, signal);
-                    this.peers[socketId].signal(signal)
-                // }
+                this.log(`Signalling ${socketId}`, signal);
+                this.peers[socketId].signal(signal)
             })
         })
     }
 
     broadcast(message) {
         this.log(`Broadcasting to ${this.getConnectedPeerCount()} peers: ${message}`);
-        for (let peer in this.peers) {
-            if (this.peers.hasOwnProperty(peer)) {
-                if (this.peers[peer] !== null) {
-                    console.log('broadcasting ', message);
-                    this.peers[peer].send(message)
-                }
+        for (let peer in this.peers)
+            if (this.peers.hasOwnProperty(peer) && this.peers[peer] !== null) {
+                console.log('broadcasting ', message);
+                if (typeof message === 'string')
+                    this.peers[peer].send(message);
+                else
+                    this.peers[peer].send(JSON.stringify(message));
             }
+    }
+
+    send(id, message) {
+        this.log(`Sending to ${id}: ${message}`);
+
+        if (this.peers.hasOwnProperty(id) && this.peers[id] !== null) {
+            console.log('broadcasting ', message);
+            if (typeof message === 'string')
+                this.peers[id].send(message);
+            else
+                this.peers[id].send(JSON.stringify(message));
         }
     }
 
@@ -139,15 +149,23 @@ export default class SimplePeerMesh {
         }
     }
 
+    sendStream(id, stream) {
+        this.log(`Sending stream to ${id}: ${stream}`);
+        if (this.peers.hasOwnProperty(id && this.peers[id] !== null))
+            this.peers[id].addStream(stream);
+    }
+
+    removeStream(id, stream) {
+        this.log(`Removing stream to ${id}: ${stream}`);
+        if (this.peers.hasOwnProperty(id && this.peers[id] !== null))
+            this.peers[id].removeStream(stream);
+    }
+
     broadcastRemoveStream(stream) {
         this.log(`broadcastRemoveStream to ${this.getConnectedPeerCount()} peers: ${stream}`);
-        for (let peer in this.peers) {
-            if (this.peers.hasOwnProperty(peer)) {
-                if (this.peers[peer] !== null) {
-                    this.peers[peer].removeStream(stream)
-                }
-            }
-        }
+        for (let peer in this.peers)
+            if (this.peers.hasOwnProperty(peer) && this.peers[peer] !== null)
+                this.peers[peer].removeStream(stream);
     }
 
     createPeer(socketId, initiator) {
@@ -172,10 +190,10 @@ export default class SimplePeerMesh {
         });
 
         peer.on('connect', () => {
-            this.fire('connect', socketId);
             let peerCount = this.getConnectedPeerCount();
             this.log('New peer connection, peer count: ', peerCount);
-            this.checkFullConnect()
+            this.fire('connect', socketId);
+            this.checkFullConnect();
         });
 
         peer.on('data', data => {
