@@ -210,9 +210,9 @@ export default {
                             chromeMediaSource: 'desktop',
                             chromeMediaSourceId: source.id,
                             minWidth: 1280,
-                            maxWidth: 3840,
                             minHeight: 720,
-                            maxHeight: 2160
+                            maxWidth: 3840,
+                            maxHeight: 2160,
                         }
                     }
                 })

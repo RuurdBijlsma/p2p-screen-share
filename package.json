@@ -1,18 +1,24 @@
 {
-  "name": "vueshare",
-  "version": "1.0.1",
+  "name": "screen-share",
+  "version": "1.0.2",
+  "description": "Peer to peer screen sharing application",
+  "author": "Ruurd Bijlsma <ruurd@bijlsma.dev>",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
+    "electron:publish": "npm run electron:build -- -p always",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
+  "repository": "https://github.com/RuurdBijlsma/p2p-screen-share",
   "main": "background.js",
   "dependencies": {
     "core-js": "^2.6.5",
+    "electron-log": "^4.3.1",
+    "electron-updater": "^4.3.5",
     "multi-peer-mesh": "github:ruurdbijlsma/multi-peer-mesh",
     "register-service-worker": "^1.6.2",
     "simple-peer": "^9.3.0",
